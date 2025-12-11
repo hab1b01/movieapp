@@ -1,0 +1,197 @@
+/* Page Container */
+.movie-detail-container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  min-height: 100vh;
+}
+
+/* Back Button */
+.back-btn {
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 25px;
+}
+.back-btn:hover {
+  background: #f3f3f3;
+}
+
+/* Main Layout */
+.movie-detail-content {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 35px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Poster */
+.detail-poster {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* Info Section */
+.movie-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: center;
+}
+
+.detail-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0;
+  color: #2c3e50;
+}
+
+/* Meta Row */
+.detail-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #eee;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+  padding: 8px 14px;
+  border-radius: 8px;
+  gap: 6px;
+  font-size: 0.95rem;
+  border: 1px solid #f1f1f1;
+}
+
+.meta-item.rating {
+  background: #fff4e5;
+  border: 1px solid #f9b46b;
+}
+
+.meta-value.highlight {
+  color: #f98012;
+  font-weight: 700;
+}
+
+/* Center Sections */
+.detail-section {
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.section-title::after {
+  display: none;
+}
+
+/* Genre Tags */
+.genre-tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genre-tag {
+  background: linear-gradient(135deg, #f98012, #d96d0f);
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 20px;
+  color: #fff;
+}
+
+/* Overview text */
+.description-text {
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+/* Director + Cast centered rows */
+.detail-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  margin: 7px 0;
+}
+
+.row-label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.row-value {
+  color: #444;
+  font-weight: 500;
+}
+
+/* Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.action-btn {
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #f98012, #d96d0f);
+  color: white;
+}
+.action-btn.primary:hover {
+  transform: translateY(-3px);
+}
+
+.action-btn.secondary {
+  background: #fff;
+  color: #f98012;
+  border: 2px solid #f98012;
+}
+.action-btn.secondary:hover {
+  background: #fff6e9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+  .movie-detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-poster {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}

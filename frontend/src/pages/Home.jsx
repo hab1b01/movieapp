@@ -1,51 +1,147 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './Home.css'
 import MovieCard from '../components/MovieCard'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
 
 const Home = () => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+  const [featured, setFeatured] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [nowShowing, setNowShowing] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchHomeContent = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BASE}/movies`);
-        if (!res.ok) throw new Error(`Server responded ${res.status}`);
-        const data = await res.json();
-        setMovies(data || []);
+        const [featuredRes, trendingRes, nowShowingRes] = await Promise.all([
+          fetch(`${API_BASE}/movies/featured?limit=5`),
+          fetch(`${API_BASE}/movies/trending?limit=5`),
+          fetch(`${API_BASE}/movies/now-showing`)
+        ]);
+
+        if (featuredRes.ok) {
+          const data = await featuredRes.json();
+          setFeatured(data.slice(0, 5));
+        }
+        if (trendingRes.ok) {
+          const data = await trendingRes.json();
+          setTrending(data.slice(0, 5));
+        }
+        if (nowShowingRes.ok) {
+          const data = await nowShowingRes.json();
+          setNowShowing(data.slice(0, 5));
+        }
       } catch (err) {
-        console.error('Failed to fetch movies', err);
-        setError('Failed to load movies');
+        console.error('Failed to fetch home content', err);
+        setError(t('landing.errorLoading'));
       } finally {
         setLoading(false);
       }
-    }
-    fetchMovies();
-  }, []);
+    };
+
+    fetchHomeContent();
+  }, [t]);
+
+  if (loading) {
+    return (
+      <div className="landing-page">
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>{t('landing.loadingContent')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="home-root">
-      <div className="home-header">
-        <h1>Movies</h1>
-      </div>
+    <div className="landing-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">{t('landing.heroTitle')}</h1>
+          <p className="hero-subtitle">{t('landing.heroSubtitle')}</p>
+          <div className="hero-buttons">
+            <Link to="/now-showing" className="hero-btn btn-primary">
+              🎬 {t('landing.nowShowingButton')}
+            </Link>
+            <Link to="/browse" className="hero-btn btn-secondary">
+              {t('landing.browseButton')}
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      {loading && <div className="status">Loading movies...</div>}
-      {error && <div className="status error">{error}</div>}
+      {/* Featured Movies Section */}
+      {featured.length > 0 && (
+        <section className="content-section featured-section">
+          <div className="section-header">
+            <h2 className="section-title">{t('landing.featured')}</h2>
+          </div>
+          <div className="movies-grid">
+            {featured.map(movie => (
+              <MovieCard key={movie.id} movie={movie} showGenreBadge />
+            ))}
+          </div>
+          <div className="section-footer">
+            <Link to="/browse" className="view-all-btn">
+              {t('landing.viewAll')} →
+            </Link>
+          </div>
+        </section>
+      )}
 
-      <div className="cards-grid">
-        {movies.length === 0 && !loading && <div className="status">No movies found.</div>}
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
+      {/* Now Showing Section */}
+      {nowShowing.length > 0 && (
+        <section className="content-section now-showing-section">
+          <div className="section-header">
+            <h2 className="section-title">{t('landing.nowShowing')}</h2>
+          </div>
+          <div className="movies-grid">
+            {nowShowing.slice(0, 5).map(movie => (
+              <MovieCard key={movie.id} movie={movie} showGenreBadge />
+            ))}
+          </div>
+          <div className="section-footer">
+            <Link to="/browse" className="view-all-btn">
+              {t('landing.viewAll')} →
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Trending Movies */}
+      {trending.length > 0 && (
+        <section className="content-section trending-movies-section">
+          <div className="section-header">
+            <h2 className="section-title">{t('landing.trending')}</h2>
+          </div>
+          <div className="movies-grid">
+            {trending.map(movie => (
+              <MovieCard key={movie.id} movie={movie} showRating />
+            ))}
+          </div>
+          <div className="section-footer">
+            <Link to="/browse" className="view-all-btn">
+              {t('landing.viewAll')} →
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
